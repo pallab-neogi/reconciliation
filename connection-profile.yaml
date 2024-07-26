@@ -1,0 +1,79 @@
+name: net_test
+version: 1.0.0
+client:
+  organization: Org1
+  connection:
+    timeout:
+      peer:
+        endorser: 300
+      orderer: 300
+organizations:
+  Org1:
+    mspid: Org1MSP
+    peers:
+      - peer0.org1.example.com
+    certificateAuthorities:
+      - ca.org1.example.com
+    cryptoPath: organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+peers:
+  peer0.org1.example.com:
+    url: grpcs://peer0.org1.example.com:7051
+    grpcOptions:
+      ssl-target-name-override: "peer0.org1.example.com"
+      hostnameOverride": "peer0.org1.example.com"
+    tlsCACerts:
+      path: organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+orderers:
+  orderer.example.com:
+    url: grpcs://orderer.example.com:7050
+    grpcOptions:
+      ssl-target-name-override: "orderer.example.com"
+      hostnameOverride": "orderer.example.com"
+    tlsCACerts:
+      path: organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
+certificateAuthorities:
+  ca.org1.example.com:
+    url: https://ca.org1.example.com:7054
+    caName: ca-org1
+    tlsCACerts:
+      path: organizations/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+    httpOptions:
+      verify: false
+channels:
+  mychannel:
+    orderers:
+      - orderer.example.com
+    peers:
+      peer0.org1.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+      peer0.org2.example.com:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+    policies:
+      discovery:
+        maxTargets: 1
+        retryOpts:
+          attempts: 2
+          backoffFactor: 2
+          initialBackoff: 500ms
+          maxBackoff: 5s
+      eventService:
+        balancer: Random
+        blockHeightLagThreshold: 5
+        peerMonitorPeriod: 6s
+        reconnectBlockHeightLagThreshold: 8
+        resolverStrategy: PreferOrg
+      queryChannelConfig:
+        maxTargets: 1
+        minResponses: 1
+        retryOpts:
+          attempts: 2
+          backoffFactor: 1
+          initialBackoff: 500ms
+          maxBackoff: 5s
+              

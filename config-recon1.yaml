@@ -1,0 +1,39 @@
+azure:
+  accountName: "rec7dlt"
+  accountKey: ""
+  shareName: "rec7share"
+  directoryPath: {"MARKOFFREJ":"RCLGE","MARKOFFACC":"RCLGE","UPF":"RPP"} #,"MARKOFFACC":"RCLGE","MARKOFFREJ":"RCLGE"}  #["MARKOFFACC":"RCLGE"]  #["UPF","MarkOffAcc","MarkOffRej", "CASA","CARD"]   {"UPF":"RPP"}
+  fileName: "your-file-name"
+
+kafka:
+  broker: "localhost:9092"
+  topic: "recon1"
+  groupid: "xyz"
+
+csv:
+  chunkSize: 1000
+
+retry:
+  maxRetries: 5
+  retryInterval: 2s
+
+fabric:
+  mspID: "Org1MSP"
+  cryptoPath: "../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com"
+  certPath: "/users/User1@org1.example.com/msp/signcerts"
+  keyPath: "/users/User1@org1.example.com/msp/keystore"
+  tlsCertPath: "/peers/peer0.org1.example.com/tls/ca.crt"
+  peerEndpoint: "dns:///localhost:7051"
+  gatewayPeer: "peer0.org1.example.com"
+
+dlt:
+  ChannelID: "mychannel"
+  ChaincodeID: "basic"
+  User: "Admin"
+  Org: "Org1"
+  ConfigFilePath: "./connection-profile.yaml"
+
+postgres:  
+  server: localhost:5432
+  user: admin
+  password: adminpw

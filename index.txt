@@ -1,0 +1,62 @@
+{
+  "index": {
+    "fields": [
+      {
+        "transdatetime": "asc"
+      },
+      {
+        "uetr": "asc"
+      },
+      {
+        "doctype": "asc"
+      }
+    ]
+  },
+  "name": "indexOwnerDateStatus",
+  "type": "json"
+}
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "index": {
+    "fields": ["date", "status", "type"]
+  },
+  "name": "date_status_type_index",
+  "type": "json"
+}' http://admin:password@localhost:5984/your_database/_index
+
+
+{
+   "selector": {
+      "transdatetime": {
+         "$gte": "2024-05-30T00:00:00Z",
+         "$lte": "2024-05-30T00:00:00Z"
+      },
+      "reconcile": false,
+      "uetr": "596094bd-c51c-47bb-bca3-ee8d242e923e",
+      "status": "ACCC",
+      "doctype": {
+         "$in": [
+            "CASR",
+            "CASA",
+            "MARKOFFREJ",
+            "MARKOFFACC"
+         ]
+      }
+   }
+}
+
+
+{\n        \"selector\": {\n            \"transdatetime\": {\n                \"$gte\": \"2024-05-30T00:00:00Z\",\n                \"$lte\": \"2024-05-30T00:00:00Z\"\n            },\n\t\t\t\"uetr\":596094bd-c51c-47bb-bca3-ee8d242e923e\",\n\t\t\t\"reconcile\": false,\n\t\t\t\"status\":ACCC\",\n\t\t\t\"entrysign\": D\",\n\t\t\t\"doctype\":{\"$in\": [\"CASR\",\"CASA\",\"MARKOFFREJ\",\"MARKOFFACC\"]}
+
+"selector": {
+            "transdatetime": {
+                "$gte": "%s",
+                "$lte": "%s"
+            },
+			"uetr": "%s",
+			"reconcile": false,
+			"status": "%s",
+			"entrysign": "%s",
+			"doctype":{"$in": ["CAR","CASA","MARKOFFREJ","MARKOFFACC"]}
+        	}
+    	}`, startDate, endDate, upf.UetrId, upf.Status, upf.EntrySign)

@@ -1,0 +1,49 @@
+yJo3XxNs6BdwRsLc7F8eke3X8mZLjAMhXWmgzqGru3vtJ0YeYrGBMiaKfIKaTTHtSao9INa4HbYY+ASt498z4Q==
+
+
+#Kafka setup
+
+docker exec -it kafka bash
+kafka-topics --create --topic recon1 --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics --list --bootstrap-server localhost:9092
+kafka-console-producer --topic recon1 --bootstrap-server localhost:9092
+
+kafka-console-consumer --topic recon1 --bootstrap-server localhost:9092 --from-beginning
+
+
+./network.sh up
+./network.sh createChannel
+./network.sh deployCC -ccn basic -ccp ../../reconciliation-cc -ccl go
+
+
+Run the jobs manually.
+
+
+go run main.go -a=recon-producer -config=config-recon1
+go run main.go -a=recon-consumer -config=config-recon1
+
+
+go run main.go -a=recon1-reconcile -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
+go run main.go -a=recon1-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon1
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="UPF,CARD, CASA" -config=config-recon1
+
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon1
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon2
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon3
+
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFREJ" -config=config-recon1
+
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="GL" -config=config-recon2
+go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="GL" -config=config-recon3
+
+
+go run main.go -a=reconciliation2 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
+go run main.go -a=reconciliation3 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
+
+go run main.go -a=recon2-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon1
+go run main.go -a=recon3-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon1
+
+/var/lib/postgresql/data
+
+
+
