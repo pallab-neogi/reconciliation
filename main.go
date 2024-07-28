@@ -39,7 +39,7 @@ func main() {
 	fmt.Println("Starting Reconciliation job . Version ")
 	defer fmt.Println("Shutdown Reconciliation complete....")
 
-	action := flag.String("a", "", "recon-producer|recon-consumer|recon1-updatetrans|recon1-unmatchtrans|reconciliation2|reconciliation3")
+	action := flag.String("a", "", "recon-producer|recon-consumer|recon1-updatetrans|recon-unmatchtrans|reconciliation1|reconciliation2|reconciliation3")
 	configname := flag.String("config", "", "config-recon1|config-recon2|config-recon3")
 	startDate := flag.String("start", "", "Start date")
 	endDate := flag.String("end", "", "End Date")
@@ -87,7 +87,7 @@ func main() {
 
 					logrus.Infof("Retrieved Kafka record %s", record)
 
-					jsonData, id, _ := transformer.TransformRecord(record, dirName, config.Dlt.ChannelID)
+					jsonData, id, _ := transformer.TransformRecord(record, dirName, config.Kafka.Topic)
 
 					if jsonData != nil {
 						recordsChan <- Message{Topic: config.Kafka.Topic, Key: id, Payload: jsonData}
@@ -158,7 +158,7 @@ func main() {
 
 		}
 
-	case "recon1-reconcile":
+	case "reconciliation1":
 		{
 
 			connStr := fmt.Sprintf("postgres://%s:%s@%s/reconcile", config.Postgres.User, config.Postgres.Password, config.Postgres.Server)
@@ -256,57 +256,57 @@ func main() {
 			matchedTransByte, err := dlt.UpdateTrans(config, DLTId, transformer.GetCurrentTime())
 
 			if err != nil {
-				log.Fatalf("Failed to query data: %v\n", err)
+				log.Printf("Failed to update DLT ID for recon1-updatetrans: %v\n", err)
 			}
 
-			log.Printf("DLT update completed %v", string(matchedTransByte))
+			log.Printf("DLT update status %v", string(matchedTransByte))
 
 		}
-	case "recon1-unmatchtrans":
-		{
-			connStr := fmt.Sprintf("postgres://%s:%s@%s/reconcile", config.Postgres.User, config.Postgres.Password, config.Postgres.Server)
+	/*case "recon1-unmatchtrans":
+	{
+		connStr := fmt.Sprintf("postgres://%s:%s@%s/reconcile", config.Postgres.User, config.Postgres.Password, config.Postgres.Server)
 
-			fmt.Printf("Connection String : %v", connStr)
+		fmt.Printf("Connection String : %v", connStr)
 
-			// Create PostgreSQL connection pool
-			pool, err := postgresdb.CreatePostgresConnectionPool(connStr)
+		// Create PostgreSQL connection pool
+		pool, err := postgresdb.CreatePostgresConnectionPool(connStr)
+		if err != nil {
+			log.Fatalf("Failed to create connection pool: %v", err)
+		}
+		defer pool.Close()
+
+		// Channel to receive the queried users
+		userChannel := make(chan []byte)
+		errChannel := make(chan error)
+
+		// Start a goroutine to query Hyperledger data
+		go func() {
+
+			unmatchedTransByte, err := dlt.QueryTrans(config, "queryUnmatchTrans", *startDate, *endDate, *docType)
+
+			fmt.Printf("matchedTransByte matchedTransByte : %v", string(unmatchedTransByte))
+
 			if err != nil {
-				log.Fatalf("Failed to create connection pool: %v", err)
+				errChannel <- err
+				return
 			}
-			defer pool.Close()
+			userChannel <- unmatchedTransByte
+		}()
 
-			// Channel to receive the queried users
-			userChannel := make(chan []byte)
-			errChannel := make(chan error)
+		// Handle the results
+		select {
+		case unmatchedTransByte := <-userChannel:
+			// Load data into PostgreSQL
 
-			// Start a goroutine to query Hyperledger data
-			go func() {
-
-				unmatchedTransByte, err := dlt.QueryTrans(config, "queryUnmatchTrans", *startDate, *endDate, *docType)
-
-				fmt.Printf("matchedTransByte matchedTransByte : %v", string(unmatchedTransByte))
-
-				if err != nil {
-					errChannel <- err
-					return
-				}
-				userChannel <- unmatchedTransByte
-			}()
-
-			// Handle the results
-			select {
-			case unmatchedTransByte := <-userChannel:
-				// Load data into PostgreSQL
-
-				if err := postgresdb.BulkInsertUnmatchTrans(pool, unmatchedTransByte, *docType, config.Dlt.ChannelID); err != nil {
-					log.Fatalf("Failed to insert unmatch transaction: %v", err)
-				}
-				log.Println("Successfully loaded data into the Postgres!")
-
-			case err := <-errChannel:
-				log.Fatalf("Failed to query Hyperledger data: %v", err)
+			if err := postgresdb.BulkInsertUnmatchTrans(pool, unmatchedTransByte, *docType, config.Kafka.Topic); err != nil {
+				log.Fatalf("Failed to insert unmatch transaction: %v", err)
 			}
+			log.Println("Successfully loaded data into the Postgres!")
+
+		case err := <-errChannel:
+			log.Fatalf("Failed to query Hyperledger data: %v", err)
 		}
+	}*/
 
 	case "reconciliation2":
 		{
@@ -457,10 +457,10 @@ func main() {
 			matchedTransByte, err := dlt.UpdateTrans(config, DLTId, transformer.GetCurrentTime())
 
 			if err != nil {
-				log.Fatalf("Failed to query data: %v\n", err)
+				log.Printf("Failed to update DLT ID for recon2-updatetrans: %v\n", err)
 			}
 
-			log.Printf("DLT update completed %v", string(matchedTransByte))
+			log.Printf("DLT update status %v", string(matchedTransByte))
 
 		}
 	case "recon3-updatetrans":
@@ -512,13 +512,13 @@ func main() {
 			matchedTransByte, err := dlt.UpdateTrans(config, DLTId, transformer.GetCurrentTime())
 
 			if err != nil {
-				log.Fatalf("Failed to query data: %v\n", err)
+				log.Printf("Failed to update DLT ID for recon2-updatetrans: %v\n", err)
 			}
 
-			log.Printf("DLT update completed %v", string(matchedTransByte))
+			log.Printf("DLT update  %v", string(matchedTransByte))
 
 		}
-	case "recon2-unmatchtrans":
+	case "recon-unmatchtrans":
 		{
 			connStr := fmt.Sprintf("postgres://%s:%s@%s/reconcile", config.Postgres.User, config.Postgres.Password, config.Postgres.Server)
 
@@ -554,7 +554,7 @@ func main() {
 			case unmatchedTransByte := <-userChannel:
 				// Load data into PostgreSQL
 
-				if err := postgresdb.BulkInsertUnmatchTrans(pool, unmatchedTransByte, *docType, config.Dlt.ChannelID); err != nil {
+				if err := postgresdb.BulkInsertUnmatchTrans(pool, unmatchedTransByte, *docType, config.Kafka.Topic); err != nil {
 					log.Fatalf("Failed to insert unmatch transaction: %v", err)
 				}
 				log.Println("Successfully loaded data into the Postgres!")

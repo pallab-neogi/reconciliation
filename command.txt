@@ -18,30 +18,32 @@ kafka-console-consumer --topic recon1 --bootstrap-server localhost:9092 --from-b
 
 Run the jobs manually.
 
-
+Recon1  (channel=recon1, topic=recon1)
 go run main.go -a=recon-producer -config=config-recon1
 go run main.go -a=recon-consumer -config=config-recon1
-
-
-go run main.go -a=recon1-reconcile -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
+go run main.go -a=reconciliation1 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
 go run main.go -a=recon1-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon1
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="UPF,CARD, CASA" -config=config-recon1
-
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon1
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon2
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon3
-
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFREJ" -config=config-recon1
-
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="GL" -config=config-recon2
-go run main.go -a=recon1-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="GL" -config=config-recon3
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="UPF,CARD, CASA" -config=config-recon1
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon1
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFREJ" -config=config-recon1
 
 
-go run main.go -a=reconciliation2 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
-go run main.go -a=reconciliation3 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon1
+Recon2 (channel=recon2, topic=recon2)
+go run main.go -a=recon-producer -config=config-recon2   for GL and MARKOFFACC
+go run main.go -a=recon-consumer -config=config-recon2
+go run main.go -a=reconciliation2 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon2
+go run main.go -a=recon2-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon2
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon2
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="GL" -config=config-recon2
 
-go run main.go -a=recon2-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon1
-go run main.go -a=recon3-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon1
+Recon3 (channel=recon3, topic=recon3)
+go run main.go -a=recon-producer -config=config-recon3   for GL and MARKOFFACC
+go run main.go -a=recon-consumer -config=config-recon3
+go run main.go -a=reconciliation3 -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -config=config-recon3
+go run main.go -a=recon3-updatetrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z"  -config=config-recon3
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="MARKOFFACC" -config=config-recon3
+go run main.go -a=recon-unmatchtrans -start="2024-05-30T00:00:00Z" -end="2024-05-30T23:59:59Z" -doctype="GL" -config=config-recon3
+
 
 /var/lib/postgresql/data
 

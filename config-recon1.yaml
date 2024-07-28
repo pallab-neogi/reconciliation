@@ -1,6 +1,6 @@
 azure:
   accountName: "rec7dlt"
-  accountKey: ""
+  accountKey: "yJo3XxNs6BdwRsLc7F8eke3X8mZLjAMhXWmgzqGru3vtJ0YeYrGBMiaKfIKaTTHtSao9INa4HbYY+ASt498z4Q=="
   shareName: "rec7share"
   directoryPath: {"MARKOFFREJ":"RCLGE","MARKOFFACC":"RCLGE","UPF":"RPP"} #,"MARKOFFACC":"RCLGE","MARKOFFREJ":"RCLGE"}  #["MARKOFFACC":"RCLGE"]  #["UPF","MarkOffAcc","MarkOffRej", "CASA","CARD"]   {"UPF":"RPP"}
   fileName: "your-file-name"
@@ -19,7 +19,7 @@ retry:
 
 fabric:
   mspID: "Org1MSP"
-  cryptoPath: "../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com"
+  cryptoPath: "../../fabric-samples/test-network/organizations/peerOrganizations/org1.example.com"
   certPath: "/users/User1@org1.example.com/msp/signcerts"
   keyPath: "/users/User1@org1.example.com/msp/keystore"
   tlsCertPath: "/peers/peer0.org1.example.com/tls/ca.crt"

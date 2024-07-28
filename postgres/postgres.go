@@ -91,7 +91,7 @@ func BulkInsertTrans(pool *pgxpool.Pool, matchedTransByte []byte, tablename stri
 }
 
 // bulkInsertUsers inserts users into the PostgreSQL table
-func BulkInsertUnmatchTrans(pool *pgxpool.Pool, unmatchedTransByte []byte, doctype string, ChannelName string) error {
+func BulkInsertUnmatchTrans(pool *pgxpool.Pool, unmatchedTransByte []byte, doctype string, Topic string) error {
 	conn, err := pool.Acquire(context.Background())
 	if err != nil {
 		return fmt.Errorf("unable to acquire a connection: %v", err)
@@ -116,8 +116,8 @@ func BulkInsertUnmatchTrans(pool *pgxpool.Pool, unmatchedTransByte []byte, docty
 
 		var queryReturnUPF []transformer.UPF
 
-		stmt = `INSERT INTO unmatch_trans_UPF_CASA_CARD (id, doctype, recordtype, accountnumber, todaysdate, amount, entrysign,transdatetime,ref1,uetr,ref2,ref4,status,reason,reconcile,crtdate,upddt) VALUES (@id, @doctype, @recordtype, @accountnumber, @todaysdate, @amount, @entrysign,@transdatetime,@ref1,@uetr,@ref2,@ref4,@status,@reason,@reconcile,@crtdate,@upddt)
-		ON CONFLICT (id) DO NOTHING`
+		stmt = fmt.Sprintf(`INSERT INTO unmatch_trans_UPF_CASA_CARD_%s (id, doctype, recordtype, accountnumber, todaysdate, amount, entrysign,transdatetime,ref1,uetr,ref2,ref4,status,reason,reconcile,crtdate,upddt) VALUES (@id, @doctype, @recordtype, @accountnumber, @todaysdate, @amount, @entrysign,@transdatetime,@ref1,@uetr,@ref2,@ref4,@status,@reason,@reconcile,@crtdate,@upddt)
+		ON CONFLICT (id) DO NOTHING`, Topic)
 
 		if err := json.Unmarshal(unmatchedTransByte, &queryReturnUPF); err != nil {
 			panic(err)
@@ -158,7 +158,7 @@ func BulkInsertUnmatchTrans(pool *pgxpool.Pool, unmatchedTransByte []byte, docty
 			creditorname,settlementdate,transdatetime,settlementpoolref,entrysign,reconcile,status,crtdate,upddt) 
 			VALUES (@id, @doctype, @product, @scheme, @msgid, @endtoendid, @uetr,@instructbic,@creditoragentbic,@amount,@currency,@debtorname,@creditorname,
 				@settlementdate,@transdatetime,@settlementpoolref,@entrysign,@reconcile,@status,@crtdate,@upddt)
-			ON CONFLICT (id) DO NOTHING`, ChannelName)
+			ON CONFLICT (id) DO NOTHING`, Topic)
 
 		if err := json.Unmarshal(unmatchedTransByte, &queryReturnMARKOFF); err != nil {
 			panic(err)
@@ -196,10 +196,10 @@ func BulkInsertUnmatchTrans(pool *pgxpool.Pool, unmatchedTransByte []byte, docty
 
 		var queryReturnMARKOFF []transformer.MarkOffRej
 
-		stmt = `INSERT INTO unmatch_trans_markoffrej (id, doctype, product, scheme, msgid, endtoendid, uetr,instructbic,payeeagentbic,amount,currency,category,status,reasoncode,reasondesc,transdatetime,entrysign,reconcile,crtdate,upddt) 
+		stmt = fmt.Sprintf(`INSERT INTO unmatch_trans_markoffrej_%s (id, doctype, product, scheme, msgid, endtoendid, uetr,instructbic,payeeagentbic,amount,currency,category,status,reasoncode,reasondesc,transdatetime,entrysign,reconcile,crtdate,upddt) 
 			VALUES (@id, @doctype, @product, @scheme, @msgid, @endtoendid, @uetr,@instructbic,@payeeagentbic,@amount,@currency,@category,@status,
 				@reasoncode,@reasondesc,@transdatetime,@entrysign,@reconcile,@crtdate,@upddt)
-			ON CONFLICT (id) DO NOTHING`
+			ON CONFLICT (id) DO NOTHING`, Topic)
 
 		if err := json.Unmarshal(unmatchedTransByte, &queryReturnMARKOFF); err != nil {
 			panic(err)
@@ -239,7 +239,7 @@ func BulkInsertUnmatchTrans(pool *pgxpool.Pool, unmatchedTransByte []byte, docty
 
 		stmt = fmt.Sprintf(`INSERT INTO unmatch_trans_GL_%s (id,	doctype,recon,	recordtype,account,currency,transdatetime,amount,entrysign,	Date1,Date2,uetr,branch,reconcile,crtdate,upddt) 
 			VALUES (@id, @doctype,@recon,@recordtype,@account,@currency,@transdatetime,@amount,@entrysign,	@Date1,@Date2,@uetr,@branch,@reconcile,@crtdate,@upddt)
-			ON CONFLICT (id) DO NOTHING`, ChannelName)
+			ON CONFLICT (id) DO NOTHING`, Topic)
 
 		if err := json.Unmarshal(unmatchedTransByte, &queryReturnGL); err != nil {
 			panic(err)

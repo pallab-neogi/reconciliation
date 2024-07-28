@@ -1,3 +1,5 @@
+Recon1
+
 {
   "index": {
     "fields": [
@@ -15,6 +17,45 @@
   "name": "indexOwnerDateStatus",
   "type": "json"
 }
+
+Recon2
+{
+  "index": {
+    "fields": [
+      {
+        "transdatetime": "asc"
+      },
+      {
+        "uetr30": "asc"
+      },
+      {
+        "amount": "asc"
+      }
+    ]
+  },
+  "name": "indexOwnerDateStatus",
+  "type": "json"
+}
+
+
+Recon3
+{
+  "index": {
+    "fields": [
+      {
+        "transdatetime": "asc"
+      },
+      {
+        "amount": "asc"
+      }
+    ]
+  },
+  "name": "indexOwnerDateStatus",
+  "type": "json"
+}
+
+
+
 
 curl -X POST -H "Content-Type: application/json" -d '{
   "index": {

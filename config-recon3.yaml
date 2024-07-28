@@ -7,7 +7,7 @@ azure:
 
 kafka:
   broker: "localhost:9092"
-  topic: "recon2"
+  topic: "recon3"
   groupid: "xyz"
 
 csv:

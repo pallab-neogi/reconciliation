@@ -1,8 +1,18 @@
 
+/* 
+
 drop table public.match_trans;
-drop table public.unmatch_trans_markoffacc;
-drop table public.unmatch_trans_markoffrej;
-drop table public.unmatch_trans_upf_casa_card
+drop table public.match_trans_recon2;
+drop table public.match_trans_recon3;
+drop table public.unmatch_trans_upf_casa_card_recon1;
+drop table public.unmatch_trans_markoffacc_recon1;
+drop table public.unmatch_trans_markoffacc_recon2;
+drop table public.unmatch_trans_markoffacc_recon3;
+drop table public.unmatch_trans_markoffrej_recon1;
+drop table public.unmatch_trans_gl_recon2;
+drop table public.unmatch_trans_gl_recon3;
+
+*/
 
 
 CREATE TABLE match_trans (
@@ -26,7 +36,7 @@ CREATE TABLE match_trans_recon3 (
     uetr VARCHAR(50)
 );
 
-CREATE TABLE unmatch_trans_UPF_CASA_CARD (
+CREATE TABLE unmatch_trans_UPF_CASA_CARD_recon1 (
     id varchar(50) PRIMARY KEY,
     doctype VARCHAR(20),
     recordtype VARCHAR(20),
@@ -56,7 +66,7 @@ CREATE TABLE unmatch_trans_markoffacc_recon1(
     uetr VARCHAR(50),
     instructbic VARCHAR(50),
     creditoragentbic VARCHAR(50),
-    amount VARCHAR(50),
+   amount decimal(20,4),
     currency VARCHAR(50),
     debtorname VARCHAR(50),
     creditorname VARCHAR(50),
@@ -71,7 +81,7 @@ CREATE TABLE unmatch_trans_markoffacc_recon1(
     upddt VARCHAR(50)
 );
 
-CREATE TABLE unmatch_trans_markoffrej(
+CREATE TABLE unmatch_trans_markoffrej_recon1(
     id varchar(50) PRIMARY KEY,
     doctype VARCHAR(20),
     product VARCHAR(20),
@@ -94,7 +104,7 @@ CREATE TABLE unmatch_trans_markoffrej(
     upddt VARCHAR(50)
 );
 
-CREATE TABLE unmatch_trans_GL_recon2(
+CREATE TABLE unmatch_trans_gl_recon2(
 	id varchar(50) PRIMARY KEY,
 	doctype VARCHAR(20),
 	recon VARCHAR(20),
@@ -111,9 +121,9 @@ CREATE TABLE unmatch_trans_GL_recon2(
 	reconcile bool,
 	crtdate VARCHAR(50),
 	upddt VARCHAR(50)
-)
+);
 
-CREATE TABLE unmatch_trans_GL_recon3(
+CREATE TABLE unmatch_trans_gl_recon3(
 	id varchar(50) PRIMARY KEY,
 	doctype VARCHAR(20),
 	recon VARCHAR(20),
@@ -130,7 +140,7 @@ CREATE TABLE unmatch_trans_GL_recon3(
 	reconcile bool,
 	crtdate VARCHAR(50),
 	upddt VARCHAR(50)
-)
+);
 
 
 CREATE TABLE unmatch_trans_markoffacc_recon2(
@@ -144,7 +154,7 @@ CREATE TABLE unmatch_trans_markoffacc_recon2(
     uetr30 VARCHAR(50),
     instructbic VARCHAR(50),
     creditoragentbic VARCHAR(50),
-    amount VARCHAR(50),
+    amount decimal(20,4),
     currency VARCHAR(50),
     debtorname VARCHAR(50),
     creditorname VARCHAR(50),
@@ -170,7 +180,7 @@ CREATE TABLE unmatch_trans_markoffacc_recon3(
     uetr30 VARCHAR(50),
     instructbic VARCHAR(50),
     creditoragentbic VARCHAR(50),
-    amount VARCHAR(50),
+    amount decimal(20,4),
     currency VARCHAR(50),
     debtorname VARCHAR(50),
     creditorname VARCHAR(50),

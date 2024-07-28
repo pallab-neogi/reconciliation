@@ -98,7 +98,7 @@ type MarkOffRej struct {
 	UpdateDt      string    `json:"upddt"`
 }
 
-func TransformRecord(record []string, dirName string, ChannelName string) ([]byte, string, error) {
+func TransformRecord(record []string, dirName string, Topic string) ([]byte, string, error) {
 
 	var jsonData []byte
 
@@ -197,7 +197,7 @@ func TransformRecord(record []string, dirName string, ChannelName string) ([]byt
 
 		rec.DocType = dirName
 
-		rec.Recon = ChannelName
+		rec.Recon = Topic
 
 		if record[0][97:100] == "RPN" {
 			rec.UetrId = "RPN"
@@ -205,9 +205,9 @@ func TransformRecord(record []string, dirName string, ChannelName string) ([]byt
 			rec.UetrId = record[0][97:127]
 		}
 
-		if ChannelName == "recon2" && rec.UetrId == "RPN" {
+		if Topic == "recon2" && rec.UetrId == "RPN" {
 			return nil, "", nil
-		} else if ChannelName == "recon3" && rec.UetrId != "RPN" {
+		} else if Topic == "recon3" && rec.UetrId != "RPN" {
 			return nil, "", nil
 		}
 

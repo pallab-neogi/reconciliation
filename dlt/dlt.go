@@ -246,7 +246,7 @@ func UpdateTrans(config *model.Config, DLTId string, updt string) ([]byte, error
 		client.WithCommitStatusTimeout(1*time.Minute),
 	)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer gw.Close()
 
@@ -257,9 +257,10 @@ func UpdateTrans(config *model.Config, DLTId string, updt string) ([]byte, error
 
 	// Query the ledger
 	queryResult, err := contract.SubmitTransaction("UpdateTrans", DLTId, updt)
+
 	if err != nil {
-		panic(err)
-		//return nil, err
+
+		return nil, err
 	}
 
 	fmt.Printf("*** Transaction committed successfully\n")
